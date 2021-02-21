@@ -6,6 +6,17 @@ I am learning go and thought implementing spotdl would be a good learning experi
 **Btw this is nowhere near as good as the [original](https://github.com/spotdl/spotify-downloader)**
 
 ## Usage
+1 - Get the package
+  - `$ go get -u github.com/s1as3r/gospotdl`
+
+2 - Install the package
+  - `$ go install github.com/s1as3r/gospotdl`
+
+3 - Enjoy  
+  - `$ gospotdl $spotifylink` 
+
+*Alternatively*:
+
 1 - Clone this repo
   - `$ git clone https://github.com/s1as3r/GoSpotDl`
 
@@ -19,14 +30,5 @@ I am learning go and thought implementing spotdl would be a good learning experi
 4 - Enjoy
   - `$ ./gospotdl $spotifylink`
 
-*Alternatively*:
-1 - Get the package
-  - `$ go get -u github.com/s1as3r/gospotdl`
-
-2 - Install the package
-  - `$ go install github.com/s1as3r/gospotdl`
-
-3 - Enjoy  
-  - `$ gospotdl $spotifylink`
   
 **Note: If you get 0 matches found error, then replace the provided ytapi key with your own in provider.go**
