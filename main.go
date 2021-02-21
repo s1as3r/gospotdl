@@ -1,4 +1,4 @@
-// GoSpotDl is a Golang implementation of spotDl (python)
+// A Golang implementation of spotDl (python)
 package main
 
 import (
