@@ -3,7 +3,7 @@ GoSpotDl is a Golang implemetation of spotdl (Python)
 
 I am learning go and thought implementing spotdl would be a good learning experience.
 
-**Btw this is nowhere near as good as the [original](https://github.com/spotdl/spotify-downloader)**
+**Btw this is nowhere near as good as the [original](https://github.com/spotdl/spotify-downloader). Take a look at it too**
 
 ## Usage
 1 - Get the package
