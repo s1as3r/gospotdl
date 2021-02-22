@@ -74,7 +74,7 @@ func queryAndSimplify(query string) ([]songData, error) {
 	query = strings.Join(strings.Split(query, " "), "%20")
 	searchUrl := "https://www.googleapis.com/youtube/v3/search"
 	parsedUrl := fmt.Sprintf("%s?part=snippet&maxResults=5&type=video&q=%s&key=%s",
-		searchUrl, ytApiKey, query)
+		searchUrl, query, ytApiKey)
 	response, err := http.Get(parsedUrl)
 	if err != nil {
 		return []songData{}, err
