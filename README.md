@@ -34,4 +34,5 @@ I am learning go and thought implementing spotdl would be a good learning experi
 **Note: If you get 0 matches found error, then replace the provided ytapi key with your own in provider.go**
 
 ## To-Do
+- [ ] Add a YAML confog file for Api-Keys.
 - [ ] Change To Google's Api Client Library.
