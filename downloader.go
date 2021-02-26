@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kkdai/youtube"
-	"github.com/schollz/progressbar"
+	"github.com/kkdai/youtube/v2"
+	"github.com/schollz/progressbar/v3"
 )
 
 // Download downlaods a song from Youtube

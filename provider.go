@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"sort"
 	"strings"
@@ -34,10 +33,6 @@ func getSeconds(videoId string) (int, error) {
 	}
 	defer response.Body.Close()
 
-	jsonData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return 0, err
-	}
 	var duration struct {
 		Items []struct {
 			ContentDetails struct {
@@ -46,7 +41,7 @@ func getSeconds(videoId string) (int, error) {
 		} `json:"items"`
 	}
 
-	if err := json.Unmarshal(jsonData, &duration); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&duration); err != nil {
 		return 0, err
 	}
 	durationStr := duration.Items[0].ContentDetails.DurationStr
@@ -81,10 +76,6 @@ func queryAndSimplify(query string) ([]songData, error) {
 	}
 	defer response.Body.Close()
 
-	jsonData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return []songData{}, err
-	}
 	var parsedJson struct {
 		Items []struct {
 			Id struct {
@@ -92,7 +83,7 @@ func queryAndSimplify(query string) ([]songData, error) {
 			} `json:"id"`
 		} `json:"items"`
 	}
-	if err := json.Unmarshal(jsonData, &parsedJson); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&parsedJson); err != nil {
 		return []songData{}, err
 	}
 	var results []songData
