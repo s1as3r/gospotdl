@@ -19,6 +19,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting Spotify Client: %s\n", err)
 	}
+    if len(os.Args) == 1 {
+        fmt.Println("USAGE: gospotdl $spotifyUrl")
+        os.Exit(1)
+    }
 	for _, url := range os.Args[1:] {
 		t, id := parseUrl(url)
 		switch t {
