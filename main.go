@@ -24,7 +24,7 @@ func main() {
         os.Exit(1)
     }
 	for _, url := range os.Args[1:] {
-		t, id := parseUrl(url)
+		t, id := parseArg(url)
 		switch t {
 		case "track":
 			track, err := SongObjFromID(spotifyClient, spotify.ID(id))
@@ -34,31 +34,21 @@ func main() {
 			if err := Download(track); err != nil {
 				log.Fatalf("Error Downloading Track(%s): %s\n", track.Name, err)
 			}
-			break
+
 		case "album":
 			tracks, err := GetAlbumTracks(spotifyClient, spotify.ID(id))
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 			}
-			for _, track := range tracks {
-				if err := Download(track); err != nil {
-					fmt.Fprintf(os.Stderr, "Error Downloading Track(%s): %s\n", track.Name, err)
-					continue
-				}
-			}
-			break
+            DownloadMulti(tracks)
+
 		case "playlist":
 			tracks, err := GetPlaylistTracks(spotifyClient, spotify.ID(id))
 			if err != nil {
 				log.Fatalf("Error Getting Tracks(%s): %s", id, err)
 			}
-			for _, track := range tracks {
-				if err := Download(track); err != nil {
-					fmt.Fprintf(os.Stderr, "Error Downloading Track(%s): %s\n", track.Name, err)
-					continue
-				}
-			}
-			break
+            DownloadMulti(tracks)
+
 		case "query":
 			track, err := SongObjFromQuery(spotifyClient, id)
 			if err != nil {
@@ -67,7 +57,6 @@ func main() {
 			if err := Download(track); err != nil {
 				log.Fatalf("Error Downloading Track(%s): %s\n", track.Name, err)
 			}
-			break
 		}
 	}
 }

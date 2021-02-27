@@ -36,6 +36,9 @@ I am learning go and thought implementing spotdl would be a good learning experi
 ## To-Do
 - [ ] Add a JSON config file for Api-Keys.
 - [ ] Change To Google's Api Client Library.
-- [ ] Tests
+- [ ] Tests.
 - [ ] Better Command-Line argument parsing.
-- [ ] Documentation
+- [ ] Fix ProgressBar when downloading multiple songs.
+- [x] Parallel Downloads.
+- [ ] Download best audio avaiable.
+- [ ] Documentation.

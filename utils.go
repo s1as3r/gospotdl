@@ -12,7 +12,7 @@ import (
 	"github.com/bogem/id3v2"
 )
 
-// well..., GO doesnt have an an abs function. :-(
+// well..., GO doesnt have an an absolute value function. :-(
 func abs(x int) int {
 	if x < 0 {
 		return -x
@@ -20,7 +20,7 @@ func abs(x int) int {
 	return x
 }
 
-// parseDuartion is used ot parse the length of a yt video.
+// parseDuartion is used to parse the length of a yt video.
 func parseDuration(durationStr string) (int, error) {
 	duraionRe := regexp.MustCompile(`PT(\d+H)?(\d+M)?(\d+S)?`)
 	match := duraionRe.FindStringSubmatch(durationStr)
@@ -44,8 +44,10 @@ func parseDuration(durationStr string) (int, error) {
 	return seconds, nil
 }
 
-// parseUrl parses a spotify url and returns its ID.
-func parseUrl(url string) (string, string) {
+// parseArg parses a command-line argument and
+// returns a spotify ID if the argument is a 
+// spotify link else returns the argument
+func parseArg(url string) (string, string) {
 	if strings.Contains(url, "spotify.com") {
 		url = strings.ReplaceAll(url, "\\", "/")
 		list := strings.Split(url, "/")
