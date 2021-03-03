@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 	"strings"
-    "sync"
+	"sync"
 
 	"github.com/kkdai/youtube/v2"
 	"github.com/schollz/progressbar/v3"
@@ -61,18 +61,18 @@ func Download(s SongObj) error {
 
 // DownloadMulti downlaods multiple songs in parallel.
 func DownloadMulti(tracks []SongObj) {
-    var wg sync.WaitGroup
-    tokens := make(chan struct{}, 4)
-    for _, track := range tracks {
-        wg.Add(1)
-        go func(track SongObj, wg *sync.WaitGroup) {
-            defer wg.Done()
-            tokens <- struct{}{}
-            if err := Download(track); err != nil {
-                fmt.Fprintf(os.Stderr, "Error Downloading %s: %s", track.Name, err)
-            }
-            <-tokens
-        }(track, &wg)
-    }
-    wg.Wait()
+	var wg sync.WaitGroup
+	tokens := make(chan struct{}, 4)
+	for _, track := range tracks {
+		wg.Add(1)
+		go func(track SongObj, wg *sync.WaitGroup) {
+			defer wg.Done()
+			tokens <- struct{}{}
+			if err := Download(track); err != nil {
+				fmt.Fprintf(os.Stderr, "Error Downloading %s: %s", track.Name, err)
+			}
+			<-tokens
+		}(track, &wg)
+	}
+	wg.Wait()
 }

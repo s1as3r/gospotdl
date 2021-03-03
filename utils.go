@@ -33,11 +33,11 @@ func parseDuration(durationStr string) (int, error) {
 			continue
 		}
 		p, _ := strconv.Atoi(i[:len(i)-1])
-		if strings.Contains(i, "H") {
+		if strings.HasSuffix(i, "H") {
 			seconds += p * 3600
-		} else if strings.Contains(i, "M") {
+		} else if strings.HasSuffix(i, "M") {
 			seconds += p * 60
-		} else {
+		} else if strings.HasSuffix(i, "S") {
 			seconds += p
 		}
 	}
@@ -45,11 +45,12 @@ func parseDuration(durationStr string) (int, error) {
 }
 
 // parseArg parses a command-line argument and
-// returns a spotify ID if the argument is a 
+// returns a spotify ID if the argument is a
 // spotify link else returns the argument
 func parseArg(url string) (string, string) {
 	if strings.Contains(url, "spotify.com") {
 		url = strings.ReplaceAll(url, "\\", "/")
+		url = strings.TrimSuffix(url, "/")
 		list := strings.Split(url, "/")
 		id := list[len(list)-1]
 		id = strings.Split(id, "?")[0]
