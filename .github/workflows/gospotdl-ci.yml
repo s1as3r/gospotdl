@@ -20,10 +20,6 @@ jobs:
         with:
           go-version: 1.16
       - 
-        name: Install Dependencies
-        run: |
-          go get -u ./...
-      - 
         name: Run Tests
         run: |
           go test -v
