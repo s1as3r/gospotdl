@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -19,11 +20,16 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting Spotify Client: %s\n", err)
 	}
-    if len(os.Args) == 1 {
-        fmt.Println("USAGE: gospotdl $spotifyUrl")
-        os.Exit(1)
-    }
-	for _, url := range os.Args[1:] {
+	var dir string
+	flag.StringVar(&dir, "output", ".", "Output Directory")
+	flag.StringVar(&dir, "o", ".", "Output Directory")
+	flag.Parse()
+
+	if err := os.Chdir(dir); err != nil {
+		log.Fatalf("Error changing directory: %s", err)
+	}
+
+	for _, url := range flag.Args() {
 		t, id := parseArg(url)
 		switch t {
 		case "track":
@@ -40,14 +46,14 @@ func main() {
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
 			}
-            DownloadMulti(tracks)
+			DownloadMulti(tracks)
 
 		case "playlist":
 			tracks, err := GetPlaylistTracks(spotifyClient, spotify.ID(id))
 			if err != nil {
 				log.Fatalf("Error Getting Tracks(%s): %s", id, err)
 			}
-            DownloadMulti(tracks)
+			DownloadMulti(tracks)
 
 		case "query":
 			track, err := SongObjFromQuery(spotifyClient, id)
