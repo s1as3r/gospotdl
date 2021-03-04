@@ -13,7 +13,7 @@ I am learning go and thought implementing spotdl would be a good learning experi
   - `$ go install github.com/s1as3r/gospotdl`
 
 3 - Enjoy  
-  - `$ GoSpotDl $spotifylink` 
+  - `$ gospotdl $spotifylink` 
 
 *Alternatively*:
 

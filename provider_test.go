@@ -34,7 +34,7 @@ func TestGetBestMatch(t *testing.T) {
 		link    string
 	}{
 		{"Clouds", []string{"NF"}, 243, "https://youtube.com/watch?v=Z0Wc2-qDdn0"},
-		{"Hard On Yourself", []string{"Charlie Puth", "blackbear"}, 1601, "https://youtube.com/watch?v=ceE2nngQs8E"},
+		{"Hard On Yourself", []string{"Charlie Puth", "blackbear"}, 160, "https://youtube.com/watch?v=L_RkUodwy6Y"},
 		{"Toosie Slide", []string{"Drake"}, 247, "https://youtube.com/watch?v=EGr-fMU6Kd4"},
 	}
 
