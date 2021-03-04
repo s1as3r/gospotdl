@@ -129,6 +129,5 @@ func GetBestMatch(songName string, songArtists []string, songDuration int) (stri
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].timeDiff < results[j].timeDiff
 	})
-
 	return results[0].Link, err
 }

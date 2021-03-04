@@ -34,8 +34,7 @@ I am learning go and thought implementing spotdl would be a good learning experi
 **Note: If you get 0 matches found error, then replace the provided ytapi key with your own in provider.go**
 
 ## To-Do
-- [ ] Add a JSON config file for Api-Keys.
-- [ ] Change To Google's Api Client Library.
+- [ ] Change to YTMusic Api.
 - [ ] Tests.
 - [ ] Fix ProgressBar when downloading multiple songs.
 - [x] Parallel Downloads.
