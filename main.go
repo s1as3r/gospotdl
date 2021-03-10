@@ -3,11 +3,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
-
-	"github.com/zmb3/spotify"
 )
 
 const (
@@ -30,39 +27,6 @@ func main() {
 	}
 
 	for _, url := range flag.Args() {
-		t, id := parseArg(url)
-		switch t {
-		case "track":
-			track, err := SongObjFromID(spotifyClient, spotify.ID(id))
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			}
-			if err := Download(track); err != nil {
-				log.Fatalf("Error Downloading Track(%s): %s\n", track.Name, err)
-			}
-
-		case "album":
-			tracks, err := GetAlbumTracks(spotifyClient, spotify.ID(id))
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-			}
-			DownloadMulti(tracks)
-
-		case "playlist":
-			tracks, err := GetPlaylistTracks(spotifyClient, spotify.ID(id))
-			if err != nil {
-				log.Fatalf("Error Getting Tracks(%s): %s", id, err)
-			}
-			DownloadMulti(tracks)
-
-		case "query":
-			track, err := SongObjFromQuery(spotifyClient, id)
-			if err != nil {
-				log.Fatalf("Error Getting Song(%s): %s", id, err)
-			}
-			if err := Download(track); err != nil {
-				log.Fatalf("Error Downloading Track(%s): %s\n", track.Name, err)
-			}
-		}
+		handleArg(url, spotifyClient)
 	}
 }
