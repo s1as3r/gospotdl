@@ -18,7 +18,7 @@ I am learning go and thought implementing spotdl would be a good learning experi
 *Alternatively*:
 
 1 - Clone this repo
-  - `$ git clone https://github.com/s1as3r/gospotdl``
+  - `$ git clone https://github.com/s1as3r/gospotdl`
 
 2 - Install the Dependencies
   - `$ cd GoSpotDl`
