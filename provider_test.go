@@ -12,7 +12,7 @@ func TestGetBestMatch(t *testing.T) {
 		artists []string
 		link    string
 	}{
-		{"CLOUDS", []string{"NF"}, "https://youtube.com/watch?v=vdR5ZeCD4Vk"},
+		{"CLOUDS", []string{"NF"}, "https://youtube.com/watch?v=JXOYZXb0no4"},
 		{"Hard On Yourself", []string{"Charlie Puth", "blackbear"}, "https://youtube.com/watch?v=O7uc5Yqjhsg"},
 		{"Toosie Slide", []string{"Drake"}, "https://youtube.com/watch?v=eqMj9DTQcAQ"},
 		{"Sun Is Shining", []string{"Axwell /\\ Ingrosso", "Axwell", "Sebastian Ingrosso"}, "https://youtube.com/watch?v=7e-A7y9WesI"},
