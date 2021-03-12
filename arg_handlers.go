@@ -40,7 +40,7 @@ func handleAlbum(client spotify.Client, id string) {
 	DownloadMulti(tracks)
 }
 
-func handlePlaylist(client spotify.Client, id string)  {
+func handlePlaylist(client spotify.Client, id string) {
 	tracks, err := GetPlaylistTracks(client, spotify.ID(id))
 	if err != nil {
 		log.Fatalf("Error Getting Tracks(%s): %s", id, err)

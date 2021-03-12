@@ -4,130 +4,105 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
 	"strings"
 )
 
-const (
-	ytApiKey = "AIzaSyC05R5TtMtuyUFZKASO2H1Cvv6N2la6e60"
-)
-
-type songData struct {
-	Link   string
-	Length int
+type YtMusicResponse struct {
+	Contents1 struct {
+		SectionListRenderer struct {
+			Contents2 []struct {
+				MusicShelfRenderer struct {
+					Contents3 []struct {
+						MusicResponsiveListItemRenderer struct {
+							Overlay struct {
+								MusicItemThumbnailOverlayRenderer struct {
+									Content4 struct {
+										MusicPlayButtonRenderer struct {
+											PlayNavigationEndpoint struct {
+												WatchEndpoint struct {
+													VideoId string `json:"videoId"`
+												} `json:"watchEndpoint"`
+											} `json:"playNavigationEndpoint"`
+										} `json:"musicPlayButtonRenderer"`
+									} `json:"content"`
+								} `json:"musicItemThumbnailOverlayRenderer"`
+							} `json:"overlay"`
+						} `json:"musicResponsiveListItemRenderer"`
+					} `json:"contents"`
+				} `json:"musicShelfRenderer"`
+			} `json:"contents"`
+		} `json:"sectionListRenderer"`
+	} `json:"contents"`
 }
 
-type diffResult struct {
-	timeDiff int
-	Link     string
+func getYtmResponse(query string) (YtMusicResponse, error) {
+	payload_str := `{context:{client:{clientName:"WEB_REMIX",clientVersion:"0.1",}},query: "%s", params:"Eg-KAQwIARAAGAAgACgAMABCAggBagoQBBADEAkQBRAK"}`
+	payload_str = fmt.Sprintf(payload_str, query)
+	payload := strings.NewReader(payload_str)
+	url := "https://music.youtube.com/youtubei/v1/search?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30"
+	method := "POST"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, payload)
+
+	if err != nil {
+		return YtMusicResponse{}, fmt.Errorf("Error creating request: %s", err)
+	}
+	req.Header.Add("Referer", "https://music.youtube.com/search")
+	req.Header.Add("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		return YtMusicResponse{}, fmt.Errorf("Error getting data from ytmusic: %s", err)
+	}
+	defer res.Body.Close()
+
+	decoder := json.NewDecoder(res.Body)
+	var response YtMusicResponse
+	if err := decoder.Decode(&response); err != nil {
+		return YtMusicResponse{}, fmt.Errorf("Error decoding ytmusic json: %s", err)
+	}
+	return response, nil
 }
 
-// getSeconds gets the length of a yt video in seconds.
-func getSeconds(videoId string) (int, error) {
-	videoUrl := "https://youtube.googleapis.com/youtube/v3/videos"
-	parsedUrl := fmt.Sprintf("%s?part=contentDetails&key=%s&id=%s",
-		videoUrl, ytApiKey, videoId)
-	response, err := http.Get(parsedUrl)
-	if err != nil {
-		return 0, err
-	}
-	defer response.Body.Close()
-
-	var duration struct {
-		Items []struct {
-			ContentDetails struct {
-				DurationStr string `json:"duration"`
-			} `json:"contentDetails"`
-		} `json:"items"`
-	}
-
-	if err := json.NewDecoder(response.Body).Decode(&duration); err != nil {
-		return 0, err
-	}
-	durationStr := duration.Items[0].ContentDetails.DurationStr
-	seconds, err := parseDuration(durationStr)
-	if err != nil {
-		return 0, err
-	}
-	return seconds, nil
-}
-
-// mapIdToSongData is used to get a songData struct.
-func mapIdToSongData(id string) (songData, error) {
-	var song songData
-	song.Link = fmt.Sprintf("https://youtube.com/watch?v=%s", id)
-	length, err := getSeconds(id)
-	if err != nil {
-		return song, err
-	}
-	song.Length = length
-	return song, nil
-}
-
-// queryAndSimplify queries youtube and returns a list of simplified matches.
-func queryAndSimplify(query string) ([]songData, error) {
-	query = strings.Join(strings.Split(query, " "), "%20")
-	searchUrl := "https://www.googleapis.com/youtube/v3/search"
-	parsedUrl := fmt.Sprintf("%s?part=snippet&maxResults=5&type=video&q=%s&key=%s",
-		searchUrl, query, ytApiKey)
-	response, err := http.Get(parsedUrl)
-	if err != nil {
-		return []songData{}, err
-	}
-	defer response.Body.Close()
-
-	var parsedJson struct {
-		Items []struct {
-			Id struct {
-				VideoId string `json:"videoId"`
-			} `json:"id"`
-		} `json:"items"`
-	}
-	if err := json.NewDecoder(response.Body).Decode(&parsedJson); err != nil {
-		return []songData{}, err
-	}
-	var results []songData
-	for _, i := range parsedJson.Items {
-		data, err := mapIdToSongData(i.Id.VideoId)
-		if err != nil {
-			return []songData{}, err
+func getYtmResults(response *YtMusicResponse) []string {
+	var results []string
+	contentBlocks := response.
+		Contents1.
+		SectionListRenderer.
+		Contents2
+	for _, i := range contentBlocks {
+		for _, block := range i.MusicShelfRenderer.Contents3 {
+			ytId := block.
+				MusicResponsiveListItemRenderer.
+				Overlay.
+				MusicItemThumbnailOverlayRenderer.
+				Content4.
+				MusicPlayButtonRenderer.
+				PlayNavigationEndpoint.
+				WatchEndpoint.
+				VideoId
+			ytLink := fmt.Sprintf("https://youtube.com/watch?v=%s", ytId)
+			results = append(results, ytLink)
 		}
-		results = append(results, data)
 	}
-	return results, nil
-}
 
-// getYtResults takes gets yt results and also the difference in duration
-// between the result and the actual spotify track.
-func getYtResults(songName string, songArtists []string, songDuration int) ([]diffResult, error) {
-	artistStr := strings.Join(songArtists, ", ")
-	query := fmt.Sprintf("%s - %s", songName, artistStr)
-	searchResults, err := queryAndSimplify(query)
-	if err != nil {
-		return []diffResult{}, err
-	}
-	var results []diffResult
-	for _, result := range searchResults {
-		timeDiff := abs(result.Length - songDuration)
-		results = append(results, diffResult{
-			timeDiff: timeDiff,
-			Link:     result.Link,
-		})
-	}
-	return results, nil
+	return results
 }
 
 // GetBestMatch gets the best youtube match for a song.
 func GetBestMatch(songName string, songArtists []string, songDuration int) (string, error) {
-	results, err := getYtResults(songName, songArtists, songDuration)
+	query := songName + " " + strings.Join(songArtists, ", ")
+	ytmResponse, err := getYtmResponse(query)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Error getting ytm response: %s", err)
 	}
+
+	results := getYtmResults(&ytmResponse)
+
 	if len(results) == 0 {
 		return "", fmt.Errorf("0 Matches Found")
 	}
-	sort.Slice(results, func(i, j int) bool {
-		return results[i].timeDiff < results[j].timeDiff
-	})
-	return results[0].Link, err
+
+	return results[0], err
 }

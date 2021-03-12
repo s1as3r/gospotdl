@@ -35,11 +35,11 @@ func Download(s SongObj) error {
 	tempFileName := baseFileName + ".temp"
 	mp3FileName := baseFileName + ".mp3"
 
-	defer os.Remove(tempFileName)
 	tempFile, err := os.Create(tempFileName)
 	if err != nil {
 		return err
 	}
+	defer os.Remove(tempFileName)
 	defer tempFile.Close()
 
 	bar := progressbar.DefaultBytes(
@@ -56,7 +56,7 @@ func Download(s SongObj) error {
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("Erro runnning ffmpeg command: %s", err)
 	}
-	if err := setId3Data(mp3FileName, s); err != nil {
+	if err := SetId3Data(mp3FileName, s); err != nil {
 		return fmt.Errorf("Error setting id3 data: %s", err)
 	}
 	return nil

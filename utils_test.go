@@ -27,24 +27,3 @@ func TestParseArg(t *testing.T) {
 		})
 	}
 }
-
-func TestParseDuration(t *testing.T) {
-	var tests = []struct {
-		str string
-		dur int
-	}{
-		{"PT9S", 9},
-		{"PT15M", 900},
-		{"PT9M32S", 572},
-		{"PT1H20M41S", 4841},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.str, func(t *testing.T) {
-			dur, err := parseDuration(tt.str)
-			if assert.Nil(t, err) {
-				assert.Equal(t, tt.dur, dur)
-			}
-		})
-	}
-}

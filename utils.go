@@ -5,44 +5,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os/exec"
-	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/bogem/id3v2"
 )
-
-// well..., GO doesnt have an an absolute value function. :-(
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
-// parseDuartion is used to parse the length of a yt video.
-func parseDuration(durationStr string) (int, error) {
-	duraionRe := regexp.MustCompile(`PT(\d+H)?(\d+M)?(\d+S)?`)
-	match := duraionRe.FindStringSubmatch(durationStr)
-	if len(match) == 0 {
-		return 0, fmt.Errorf("Error Parsing Duration: %s", durationStr)
-	}
-	var seconds int
-	for _, i := range match[1:] {
-		if i == "" {
-			continue
-		}
-		p, _ := strconv.Atoi(i[:len(i)-1])
-		if strings.HasSuffix(i, "H") {
-			seconds += p * 3600
-		} else if strings.HasSuffix(i, "M") {
-			seconds += p * 60
-		} else if strings.HasSuffix(i, "S") {
-			seconds += p
-		}
-	}
-	return seconds, nil
-}
 
 // parseArg parses a command-line argument and
 // returns a spotify ID if the argument is a
@@ -78,8 +45,8 @@ func newCmd(inputFile, outFile string, bitrate int) *exec.Cmd {
 	)
 }
 
-// setId3Data is used to set the metadata.
-func setId3Data(filePath string, s SongObj) error {
+// SetId3Data is used to set the metadata.
+func SetId3Data(filePath string, s SongObj) error {
 	mp3File, err := id3v2.Open(filePath, id3v2.Options{Parse: true})
 	if err != nil {
 		return fmt.Errorf("Error while opening file(%s): %s\n", filePath, err)
