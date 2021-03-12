@@ -35,10 +35,12 @@ func Download(s SongObj) error {
 	tempFileName := baseFileName + ".temp"
 	mp3FileName := baseFileName + ".mp3"
 
+	defer os.Remove(tempFileName)
 	tempFile, err := os.Create(tempFileName)
 	if err != nil {
 		return err
 	}
+	defer tempFile.Close()
 
 	bar := progressbar.DefaultBytes(
 		resp.ContentLength,
@@ -47,21 +49,15 @@ func Download(s SongObj) error {
 
 	_, err = io.Copy(io.MultiWriter(tempFile, bar), resp.Body)
 	if err != nil {
-		tempFile.Close()
 		return err
 	}
 
 	cmd := newCmd(tempFileName, mp3FileName, video.Formats[0].Bitrate)
 	if err := cmd.Run(); err != nil {
-		tempFile.Close()
 		return fmt.Errorf("Erro runnning ffmpeg command: %s", err)
 	}
-	tempFile.Close()
 	if err := setId3Data(mp3FileName, s); err != nil {
 		return fmt.Errorf("Error setting id3 data: %s", err)
-	}
-	if err := os.Remove(tempFileName); err != nil {
-		return fmt.Errorf("Error removing temp file(%s): %s", tempFileName, err)
 	}
 	return nil
 }
