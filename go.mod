@@ -7,6 +7,7 @@ require (
 	github.com/kkdai/youtube/v2 v2.4.1
 	github.com/schollz/progressbar/v3 v3.7.4
 	github.com/stretchr/testify v1.6.1
+	github.com/tidwall/gjson v1.6.8
 	github.com/zmb3/spotify v1.1.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

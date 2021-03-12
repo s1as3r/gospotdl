@@ -16,3 +16,6 @@
 
 # music files
 *.mp3
+
+# Vim files
+*.swp
