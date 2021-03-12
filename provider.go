@@ -91,7 +91,7 @@ func getYtmResults(response *YtMusicResponse) []string {
 }
 
 // GetBestMatch gets the best youtube match for a song.
-func GetBestMatch(songName string, songArtists []string, songDuration int) (string, error) {
+func GetBestMatch(songName string, songArtists []string) (string, error) {
 	query := songName + " " + strings.Join(songArtists, ", ")
 	ytmResponse, err := getYtmResponse(query)
 	if err != nil {

@@ -30,11 +30,8 @@ I am learning go and thought implementing spotdl would be a good learning experi
 4. Enjoy
     - `$ ./gospotdl $spotifylink`
 
-  
-**Note: If you get 0 matches found error, then replace the provided ytapi key with your own in provider.go**
-
 ## To-Do
-- [ ] Change to YTMusic Api.
+- [x] Change to YTMusic Api.
 - [ ] Tests.
 - [ ] Fix ProgressBar when downloading multiple songs.
 - [x] Parallel Downloads.

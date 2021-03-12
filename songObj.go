@@ -23,8 +23,7 @@ func SongObjFromID(spotifyClient spotify.Client, spotifyID spotify.ID) (SongObj,
 	for _, i := range trackMeta.Artists {
 		songArtists = append(songArtists, i.Name)
 	}
-	songDuration := trackMeta.Duration / 1000
-	ytLink, err := GetBestMatch(songName, songArtists, songDuration)
+	ytLink, err := GetBestMatch(songName, songArtists)
 	if err != nil {
 		return SongObj{}, fmt.Errorf("Error Getting Youtube Link: %s", err)
 	}
@@ -51,8 +50,7 @@ func SongObjFromQuery(spotifyClient spotify.Client, query string) (SongObj, erro
 	for _, i := range trackMeta.Artists {
 		songArtists = append(songArtists, i.Name)
 	}
-	songDuration := trackMeta.Duration / 1000
-	ytLink, err := GetBestMatch(songName, songArtists, songDuration)
+	ytLink, err := GetBestMatch(songName, songArtists)
 	if err != nil {
 		return SongObj{}, err
 	}
