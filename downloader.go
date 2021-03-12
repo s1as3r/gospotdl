@@ -35,11 +35,11 @@ func Download(s SongObj) error {
 	tempFileName := baseFileName + ".temp"
 	mp3FileName := baseFileName + ".mp3"
 
-	defer os.Remove(tempFileName)
 	tempFile, err := os.Create(tempFileName)
 	if err != nil {
 		return err
 	}
+	defer os.Remove(tempFileName)
 	defer tempFile.Close()
 
 	bar := progressbar.DefaultBytes(
