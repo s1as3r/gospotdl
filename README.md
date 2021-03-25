@@ -20,14 +20,10 @@ I am learning go and thought implementing spotdl would be a good learning experi
 1. Clone this repo
     - `$ git clone https://github.com/s1as3r/gospotdl`
 
-2. Install the Dependencies
-    - `$ cd GoSpotDl`
-    - `$ go get -d ./...`
-
-3. Build GoSpotDl
+2. Build GoSpotDl
     - `$ go build`
 
-4. Enjoy
+3. Enjoy
     - `$ ./gospotdl $spotifylink`
 
 ## To-Do
