@@ -20,7 +20,11 @@ func Download(s SongObj) error {
 		return err
 	}
 
-	resp, err := ytClient.GetStream(video, &video.Formats[0])
+	format := video.Formats.FindByItag(251) // Best quality audio available?
+	if format == nil {
+		format = video.Formats.FindByItag(140) // Fallback Quality
+	}
+	resp, err := ytClient.GetStream(video, format)
 	if err != nil {
 		return err
 	}
