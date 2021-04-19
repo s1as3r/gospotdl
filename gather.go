@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/zmb3/spotify"
 )
@@ -32,9 +31,9 @@ func GetAlbumTracks(spotifyClient spotify.Client, spotifyID spotify.ID) ([]SongO
 			tracks = append(tracks, songObj)
 		}
 
-		if strings.Contains(page.Next, "spotify") {
+		if page.Total > len(tracks) {
 			opt := spotify.Options{
-				Offset: &page.Offset,
+				Offset: &page.Limit,
 			}
 			page, err = spotifyClient.GetAlbumTracksOpt(spotifyID, &opt)
 			if err != nil {
@@ -71,9 +70,9 @@ func GetPlaylistTracks(spotifyClient spotify.Client, spotifyID spotify.ID) ([]So
 			tracks = append(tracks, songObj)
 		}
 
-		if strings.Contains(page.Next, "spotify") {
+		if page.Total > len(tracks) {
 			opt := spotify.Options{
-				Offset: &page.Offset,
+				Offset: &page.Limit,
 			}
 			page, err = spotifyClient.GetPlaylistTracksOpt(spotifyID, &opt, "")
 			if err != nil {
