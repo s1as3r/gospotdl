@@ -1,4 +1,4 @@
-package main
+package search
 
 import (
 	"context"
@@ -7,9 +7,9 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-// GetSpotifyClient takes a clientId and a clientSecret key and returns
-// a spotify.Client that can be used to make requests to the spotify API.
-func GetSpotifyClient(clientId, clientSecret string) (spotify.Client, error) {
+// GetSpotifyClient returns a spotify client that's used for searching
+// and getting metadata from spotify.
+func GetSpotifyClient(clientId, clientSecret string) (*spotify.Client, error) {
 	config := &clientcredentials.Config{
 		ClientID:     clientId,
 		ClientSecret: clientSecret,
@@ -18,9 +18,9 @@ func GetSpotifyClient(clientId, clientSecret string) (spotify.Client, error) {
 
 	token, err := config.Token(context.Background())
 	if err != nil {
-		return spotify.Client{}, err
+		return &spotify.Client{}, err
 	}
 
 	client := spotify.Authenticator{}.NewClient(token)
-	return client, nil
+	return &client, nil
 }
