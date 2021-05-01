@@ -1,4 +1,4 @@
-# [WIP]GoSpotDl
+# GoSpotDl
 A Golang implemetation of spotdl (Python) 
 
 I am learning go and thought implementing spotdl would be a good learning experience.
@@ -25,11 +25,3 @@ I am learning go and thought implementing spotdl would be a good learning experi
 
 3. Enjoy
     - `$ ./gospotdl $spotifylink`
-
-## To-Do
-- [x] Change to YTMusic Api.
-- [ ] Tests.
-- [ ] Fix ProgressBar when downloading multiple songs.
-- [x] Parallel Downloads.
-- [ ] Download best audio avaiable.
-- [ ] Documentation.
