@@ -14,7 +14,6 @@ func TestGetYoutubeLink(t *testing.T) {
 	}{
 		{"CLOUDS", []string{"NF"}, "https://youtube.com/watch?v=JXOYZXb0no4"},
 		{"Blinding Lights", []string{"The Weeknd"}, "https://youtube.com/watch?v=J7p4bzqLvCw"},
-		{"Closer", []string{"The Chainsmokers", "Halsey"}, "https://youtube.com/watch?v=u-YGV5xt-jk"},
 		{"Fearless Pt. II", []string{"Lost Sky", "Chris Linton"}, "https://youtube.com/watch?v=JTjmZZ1W2ew"},
 	}
 
