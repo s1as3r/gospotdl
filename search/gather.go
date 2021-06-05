@@ -11,13 +11,13 @@ import (
 func GetAlbumTracks(client *spotify.Client, spotifyId spotify.ID) ([]*Song, error) {
 	page, err := client.GetAlbumTracks(spotifyId)
 	if err != nil {
-		return []*Song{}, err
+		return []*Song{}, fmt.Errorf("[GetAlbumTracks] Error getting album tracks: %s", err)
 	}
 	var tracks []*Song
 
 	album, err := client.GetAlbum(spotifyId)
 	if err != nil {
-		return []*Song{}, err
+		return []*Song{}, fmt.Errorf("[GetAlbumTracks] Error getting album: %s", err)
 	}
 	fmt.Printf("Fetching Songs from: %s\n", album.Name)
 	for {
@@ -38,7 +38,7 @@ func GetAlbumTracks(client *spotify.Client, spotifyId spotify.ID) ([]*Song, erro
 			}
 			page, err = client.GetAlbumTracksOpt(spotifyId, &opt)
 			if err != nil {
-				return []*Song{}, err
+				return []*Song{}, fmt.Errorf("[GetAlbumTracks] Error getting album tracks: %s", err)
 			}
 		} else {
 			break
@@ -51,13 +51,13 @@ func GetAlbumTracks(client *spotify.Client, spotifyId spotify.ID) ([]*Song, erro
 func GetPlaylistTracks(client *spotify.Client, spotifyId spotify.ID) ([]*Song, error) {
 	page, err := client.GetPlaylistTracks(spotifyId)
 	if err != nil {
-		return []*Song{}, err
+		return []*Song{}, fmt.Errorf("[GetPlaylistTracks] Error getting playlist tracks: %s", err)
 	}
 	var tracks []*Song
 
 	playlist, err := client.GetPlaylist(spotifyId)
 	if err != nil {
-		return []*Song{}, err
+		return []*Song{}, fmt.Errorf("[GetPlaylistTracks] Error getting playlist: %s", err)
 	}
 	fmt.Printf("Fetching Songs from: %s\n", playlist.Name)
 	for {
@@ -78,7 +78,7 @@ func GetPlaylistTracks(client *spotify.Client, spotifyId spotify.ID) ([]*Song, e
 			}
 			page, err = client.GetPlaylistTracksOpt(spotifyId, &opt, "")
 			if err != nil {
-				return []*Song{}, err
+				return []*Song{}, fmt.Errorf("[GetPlaylistTracks] Error getting playlist: %s", err)
 			}
 		} else {
 			break

@@ -15,7 +15,7 @@ import (
 func setId3Tags(filePath string, s *search.Song) error {
 	tag, err := id3v2.Open(filePath, id3v2.Options{})
 	if err != nil {
-		return fmt.Errorf("Error while opening file(%s): %s\n", filePath, err)
+		return fmt.Errorf("[setId3Tags] Error opening file(%s): %s\n", filePath, err)
 	}
 	defer tag.Close()
 
@@ -26,13 +26,13 @@ func setId3Tags(filePath string, s *search.Song) error {
 
 	resp, err := http.Get(s.Album.Images[0].URL)
 	if err != nil {
-		return fmt.Errorf("Error Getting Cover Image: %s\n", err)
+		return fmt.Errorf("[setId3Tags] Error Getting Cover Image: %s\n", err)
 	}
 	defer resp.Body.Close()
 
 	img, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("Error reading cover image: %s", err)
+		return fmt.Errorf("[setId3Tags] Error reading cover image: %s", err)
 	}
 	albumCover := id3v2.PictureFrame{
 		Encoding:    tag.DefaultEncoding(),
@@ -51,7 +51,7 @@ func setId3Tags(filePath string, s *search.Song) error {
 	trackNumberTag.AddFrame("TRCK", trackNumberFrame)
 
 	if err = tag.Save(); err != nil {
-		return fmt.Errorf("Error while saving a tag: %s", err)
+		return fmt.Errorf("[setId3Tags] Error while saving a tag: %s", err)
 	}
 	return nil
 }

@@ -23,7 +23,7 @@ func getYtmJson(query string) (string, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("[getYtmJson] Error creating request: %s", err)
 	}
 
 	req.Header.Add("Referer", "https://music.youtube.com/search")
@@ -31,13 +31,13 @@ func getYtmJson(query string) (string, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", nil
+		return "", fmt.Errorf("[getYtmJson] Error making request: %s", err)
 	}
 	defer resp.Body.Close()
 
 	jsonBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", nil
+		return "", fmt.Errorf("[getYtmJson] Error reading response body: %s", err)
 	}
 	jsonStr := string(jsonBytes)
 
@@ -76,7 +76,7 @@ func GetYoutubeLink(songName string, songArtists []string) (string, error) {
 	query := songName + " " + strings.Join(songArtists, ", ")
 	ytmJson, err := getYtmJson(query)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("[GetYoutubeLink] Error getting json: %s", err)
 	}
 
 	results := parseYtmResults(ytmJson)
@@ -84,5 +84,5 @@ func GetYoutubeLink(songName string, songArtists []string) (string, error) {
 		return "", fmt.Errorf("0 matches found on youtube")
 	}
 
-	return results[0], err
+	return results[0], nil
 }

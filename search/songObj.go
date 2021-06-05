@@ -3,6 +3,8 @@
 package search
 
 import (
+	"fmt"
+
 	"github.com/zmb3/spotify"
 )
 
@@ -16,7 +18,7 @@ type Song struct {
 func (s *Song) FromId(client *spotify.Client, spotifyId spotify.ID) error {
 	trackMeta, err := client.GetTrack(spotifyId)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromId] Error getting track: %s", err)
 	}
 	songName := trackMeta.Name
 	var songArtsits []string
@@ -26,7 +28,7 @@ func (s *Song) FromId(client *spotify.Client, spotifyId spotify.ID) error {
 
 	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromId] Erro getting Youtube link: %s", err)
 	}
 
 	s.FullTrack = trackMeta
@@ -39,7 +41,7 @@ func (s *Song) FromId(client *spotify.Client, spotifyId spotify.ID) error {
 func (s *Song) FromQuery(client *spotify.Client, query string) error {
 	searchResults, err := client.Search(query, spotify.SearchTypeTrack)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromQuery] Error while searching: %s", err)
 	}
 	tracks := searchResults.Tracks.Tracks
 
@@ -52,7 +54,7 @@ func (s *Song) FromQuery(client *spotify.Client, query string) error {
 
 	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromQuery] Error getting Youtube link: %s", err)
 	}
 
 	s.FullTrack = &trackMeta
@@ -66,7 +68,7 @@ func (s *Song) FromSimpleTrack(client *spotify.Client, simpleTrack *spotify.Simp
 	trackId := simpleTrack.ID
 	err := s.FromId(client, trackId)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromSimpleTrack] : %s", err)
 	}
 	return nil
 }
@@ -83,7 +85,7 @@ func (s *Song) FromPlaylistTrack(playlistTrack *spotify.PlaylistTrack) error {
 
 	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Song.FromPlaylistTrack] Error getting Youtube link: %s", err)
 	}
 
 	s.FullTrack = &trackMeta

@@ -21,7 +21,7 @@ func Download(s *search.Song) error {
 
 	video, err := ytClient.GetVideo(s.YoutubeLink)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Download] Error getting video: %s", err)
 	}
 
 	formats := video.Formats
@@ -38,7 +38,7 @@ func Download(s *search.Song) error {
 
 	stream, _, err := ytClient.GetStream(video, &bestFormat)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Download] Error getting stream: %s", err)
 	}
 	defer stream.Close()
 
@@ -66,17 +66,17 @@ func Download(s *search.Song) error {
 
 	_, err = io.Copy(tempFile, stream)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Download] Error copying from stream: %s", err)
 	}
 
 	cmd := newCmd(tempFileName, mp3FileName, bestFormat.Bitrate)
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("Error running FFMpeg: %s", err)
+		return fmt.Errorf("[Download] Error running FFMpeg: %s", err)
 	}
 
 	err = setId3Tags(mp3FileName, s)
 	if err != nil {
-		return err
+		return fmt.Errorf("[Download] Error setting metadata: %s", err)
 	}
 
 	return nil

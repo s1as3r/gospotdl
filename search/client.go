@@ -2,6 +2,7 @@ package search
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/zmb3/spotify"
 	"golang.org/x/oauth2/clientcredentials"
@@ -18,7 +19,7 @@ func GetSpotifyClient(clientId, clientSecret string) (*spotify.Client, error) {
 
 	token, err := config.Token(context.Background())
 	if err != nil {
-		return &spotify.Client{}, err
+		return &spotify.Client{}, fmt.Errorf("[GetSpotifyClient] Error getting token: %s", err)
 	}
 
 	client := spotify.Authenticator{}.NewClient(token)
