@@ -36,11 +36,11 @@ func Download(s *search.Song) error {
 	}
 	bestFormat := filteredFormats[0]
 
-	stream, err := ytClient.GetStream(video, &bestFormat)
+	stream, _, err := ytClient.GetStream(video, &bestFormat)
 	if err != nil {
 		return err
 	}
-	defer stream.Body.Close()
+	defer stream.Close()
 
 	baseFileName := s.Artists[0].Name + " - " + s.Name
 	if runtime.GOOS == "windows" {
@@ -64,7 +64,7 @@ func Download(s *search.Song) error {
 	defer os.Remove(tempFileName)
 	defer tempFile.Close()
 
-	_, err = io.Copy(tempFile, stream.Body)
+	_, err = io.Copy(tempFile, stream)
 	if err != nil {
 		return err
 	}
