@@ -4,17 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/tidwall/gjson"
 )
-
-type YtmResult struct {
-	Url      string
-	Duration int
-}
 
 // getYtmJson gets the JSON String of a youtube music search
 func getYtmJson(query string) (string, error) {
@@ -52,19 +45,8 @@ func getYtmJson(query string) (string, error) {
 }
 
 // parseYtmResults parses the ytm JSON string and provides
-// a list of YtmResult
-func parseYtmResults(json string) []YtmResult {
-	gjson.AddModifier("seconds", func(json, arg string) string {
-		json = strings.ReplaceAll(json, "\"", "")
-		dur := strings.Split(json, ":")
-		if len(dur) != 2 {
-			return "0"
-		}
-		minutes, _ := strconv.Atoi(dur[0])
-		seconds, _ := strconv.Atoi(dur[1])
-		return strconv.Itoa(minutes*60 + seconds)
-	})
-
+// the yt links to the results
+func parseYtmResults(json string) []string {
 	parsedJson := gjson.Parse(json)
 	ytIds := parsedJson.Get("contents" +
 		".sectionListRenderer" +
@@ -78,61 +60,29 @@ func parseYtmResults(json string) []YtmResult {
 		".musicPlayButtonRenderer" +
 		".playNavigationEndpoint" +
 		".watchEndpoint" +
-		".videoId|@flatten").Array()
+		".videoId|@flatten")
 
-	durations := parsedJson.Get("contents" +
-		".sectionListRenderer" +
-		".contents.#" +
-		".musicShelfRenderer" +
-		".contents.#" +
-		".musicResponsiveListItemRenderer" +
-		".flexColumns.1" +
-		".musicResponsiveListItemFlexColumnRenderer" +
-		".text" +
-		".runs.4" +
-		".text.@seconds|@flatten").Array()
-
-	var resutls []YtmResult
-	for k, id := range ytIds {
+	var resutls []string
+	for _, id := range ytIds.Array() {
 		ytLink := fmt.Sprintf("https://youtube.com/watch?v=%s", id)
-		duration := durations[k].Int()
-		resutls = append(resutls, YtmResult{
-			Url:      ytLink,
-			Duration: int(duration),
-		})
+		resutls = append(resutls, ytLink)
 	}
 	return resutls
 }
 
-// getBestYtMatch returns the best match song for a given query
-// and duration (in seconds). It sorts the results by calculating
-// the difference in duration between a match and given duration
-// and returns the match with the least duartion difference.
-func getBestYtMatch(query string, duration int) (string, error) {
+// GetYoutubeLink takes a song's name and its artists' names and
+// returns it's youtube link
+func GetYoutubeLink(songName string, songArtists []string) (string, error) {
+	query := songName + " " + strings.Join(songArtists, ", ")
 	ytmJson, err := getYtmJson(query)
 	if err != nil {
-		return "", fmt.Errorf("[getBestYtMatch] Error getting json: %s", err)
+		return "", fmt.Errorf("[GetYoutubeLink] Error getting json: %s", err)
 	}
+
 	results := parseYtmResults(ytmJson)
 	if len(results) == 0 {
-		return "", fmt.Errorf("0 matches found on YTm for: %s", query)
+		return "", fmt.Errorf("0 matches found on youtube")
 	}
-	sort.Slice(results, func(i, j int) bool {
-		diff1 := abs(results[i].Duration - duration)
-		diff2 := abs(results[j].Duration - duration)
-		return diff1 < diff2
-	})
 
-	return results[0].Url, nil
-}
-
-// GetYoutubeLink takes a song's name, its artists' names and
-// it's duration in seconds and returns it's youtube link
-func GetYoutubeLink(songName string, songArtists []string, duration int) (string, error) {
-	query := songName + " " + strings.Join(songArtists, ", ")
-	ytLink, err := getBestYtMatch(query, duration)
-	if err != nil {
-		return "", err
-	}
-	return ytLink, nil
+	return results[0], nil
 }
