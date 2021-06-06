@@ -26,4 +26,4 @@ I am learning go and thought implementing spotdl would be a good learning experi
 3. Enjoy
     - `$ ./gospotdl $spotifylink`
 
-**You can also grab the latest release for your os from the [releasees page](https://github.com/s1as3r/gospotdl/releases)**
+**You can also grab the latest release for your os from the [releases page](https://github.com/s1as3r/gospotdl/releases)**
