@@ -1,5 +1,9 @@
-# GoSpotdl
-A Golang implemetation of [spotDl](https://github.com/spotdl/spotify-downloader) 
+# GoSpotDl
+A Golang implemetation of spotdl (Python) 
+
+I am learning go and thought implementing spotdl would be a good learning experience.
+
+**Have a look at the [original](https://github.com/spotdl/spotify-downloader).**
 
 ## Usage
 1. Get the package
@@ -8,7 +12,7 @@ A Golang implemetation of [spotDl](https://github.com/spotdl/spotify-downloader)
 2. Install the package
     - `$ go install github.com/s1as3r/gospotdl`
 
-3. To download a track/playlist/album simply run
+3. Enjoy  
     - `$ gospotdl $spotifylink` 
 
 *Alternatively*:
@@ -19,7 +23,7 @@ A Golang implemetation of [spotDl](https://github.com/spotdl/spotify-downloader)
 2. Build GoSpotDl
     - `$ go build`
 
-3. To download a track/playlist/album simply run
+3. Enjoy
     - `$ ./gospotdl $spotifylink`
 
-**You can also grab the latest release for your os from the [releases page](https://github.com/s1as3r/gospotdl/releases).**
+**You can also grab the latest release for your os from the [releasees page](https://github.com/s1as3r/gospotdl/releases)**

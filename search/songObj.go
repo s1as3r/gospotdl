@@ -26,8 +26,7 @@ func (s *Song) FromId(client *spotify.Client, spotifyId spotify.ID) error {
 		songArtsits = append(songArtsits, artist.Name)
 	}
 
-	duration := trackMeta.Duration / 1000
-	ytLink, err := GetYoutubeLink(songName, songArtsits, duration)
+	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
 		return fmt.Errorf("[Song.FromId] Erro getting Youtube link: %s", err)
 	}
@@ -53,8 +52,7 @@ func (s *Song) FromQuery(client *spotify.Client, query string) error {
 		songArtsits = append(songArtsits, artist.Name)
 	}
 
-	duration := trackMeta.Duration / 1000
-	ytLink, err := GetYoutubeLink(songName, songArtsits, duration)
+	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
 		return fmt.Errorf("[Song.FromQuery] Error getting Youtube link: %s", err)
 	}
@@ -85,8 +83,7 @@ func (s *Song) FromPlaylistTrack(playlistTrack *spotify.PlaylistTrack) error {
 		songArtsits = append(songArtsits, artist.Name)
 	}
 
-	duration := trackMeta.Duration / 1000
-	ytLink, err := GetYoutubeLink(songName, songArtsits, duration)
+	ytLink, err := GetYoutubeLink(songName, songArtsits)
 	if err != nil {
 		return fmt.Errorf("[Song.FromPlaylistTrack] Error getting Youtube link: %s", err)
 	}
